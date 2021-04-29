@@ -9,11 +9,11 @@ namespace SULS.Controllers
 {
     public class UsersController:Controller
     {
-        private readonly IUsersService usersService;
+        private readonly IUsersService _usersService;
 
         public UsersController(IUsersService usersService)
         {
-            usersService = usersService;
+            this._usersService = usersService;
         }
 
         public HttpResponse Login()
@@ -24,7 +24,7 @@ namespace SULS.Controllers
         [HttpPost]
         public HttpResponse Login(string username, string password)
         {
-            var userId = this.usersService.GetUserId(username, password);
+            var userId = this._usersService.GetUserId(username, password);
 
             if (userId==null)
             {
@@ -45,7 +45,7 @@ namespace SULS.Controllers
             {
                 return this.Error("Username should be between 5-20 characters");
             }
-            if (!this.usersService.IsUsernameAvailable(input.Username))
+            if (!this._usersService.IsUsernameAvailable(input.Username))
             {
                 return this.Error("Username already taken!");
             }
@@ -55,7 +55,7 @@ namespace SULS.Controllers
                 return this.Error("Invalid email address");
             }
 
-            if (!this.usersService.IsEmailAvailable(input.Email))
+            if (!this._usersService.IsEmailAvailable(input.Email))
             {
                 return this.Error("Email already taken!");
             }
@@ -70,7 +70,7 @@ namespace SULS.Controllers
                 return this.Error("Passwords do not match!");
             }
 
-            this.usersService.CreateUser(input.Username,input.Email,input.Password);
+            this._usersService.CreateUser(input.Username,input.Email,input.Password);
 
             return this.Redirect("/Users/Login");
         }
